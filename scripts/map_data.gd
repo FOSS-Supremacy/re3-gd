@@ -1,6 +1,8 @@
 class_name MapData
 extends RefCounted
 
+const LOD_VISIBILITY_BEGIN: float = 300.0
+
 var objects: Dictionary[int, ItemDefinition.ObjectDef] = { }
 var instances: Array[ItemPlacement.Instance] = []
 var collisions: Dictionary[String, CollisionFile.CollisionModel] = { }
@@ -76,11 +78,12 @@ func instantiate() -> Node3D:
 		node.transform = Utils.gta_to_godot(instance.transform)
 		node.visibility_range_end = object.draw_distances[0]
 		if object.is_big_building and not object.is_lod:
-			node.visibility_range_begin = 300.0
+			node.visibility_range_begin = LOD_VISIBILITY_BEGIN
 		root.add_child(node)
 
 		if object.is_lod:
 			var base: ItemDefinition.ObjectDef = lod_map.get(object.model_name.to_lower(), null)
+			node.visibility_range_begin = LOD_VISIBILITY_BEGIN
 			if base != null:
 				node.visibility_range_begin = base.draw_distances[0]
 			continue
